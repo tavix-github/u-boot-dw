@@ -25,7 +25,7 @@
 	"ethaddr=00:0a:35:00:01:22\0"	\
 	"kernel_image=uImage\0"	\
 	"kernel_load_address=0x2080000\0" \
-	"ramdisk_image=rootfs.cpio.gz.u-boot\0"	\
+	"ramdisk_image=uramdisk.image.gz\0"	\
 	"ramdisk_load_address=0x4000000\0"	\
 	"devicetree_image=zynq-usdr1-revB.dtb\0"	\
 	"devicetree_load_address=0x2000000\0"	\
@@ -102,6 +102,11 @@
 		"tftpboot ${devicetree_load_address} ${devicetree_image} && " \
 		"tftpboot ${ramdisk_load_address} ${ramdisk_image} && " \
 		"bootm ${kernel_load_address} ${ramdisk_load_address} ${devicetree_load_address}\0" \
+	"nfsboot=echo NFSing Linux to RAM... && " \
+		"setenv bootargs \"root=/dev/nfs nfsroot=${serverip}:/nfsroot ip=${ipaddr}:${serverip}:192.168.1.1:255.255.255.0:zynq:eth0:off\" && " \
+		"tftpboot ${kernel_load_address} ${kernel_image} && " \
+		"tftpboot ${devicetree_load_address} ${devicetree_image} && " \
+		"bootm ${kernel_load_address} - ${devicetree_load_address}\0" \
 	"rsa_norboot=echo Copying Image from NOR flash to RAM... && " \
 		"cp.b 0xE2100000 0x100000 ${boot_size} && " \
 		"zynqrsa 0x100000 && " \
